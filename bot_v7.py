@@ -7,6 +7,7 @@
 
 import asyncio
 import logging
+import os
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.error import TimedOut, NetworkError
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
@@ -23,7 +24,7 @@ from hashtag_search import find_matching_tag, build_hashtag_report, build_actual
 from llm_client import llm_match_query, llm_generate_keywords
 
 # ==== ВСТАВЬ СВОЙ ТОКЕН СЮДА (между кавычками) ====
-BOT_TOKEN = "8794997220:AAE1jqBr2OQH80dXJb677MuQiEhGIBXYpZ8"
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 # ====================================================
 
 # /collect — тяжёлая команда (сбор + перевод + LLM-теги + дайджесты),
@@ -328,8 +329,8 @@ async def scheduled_pipeline(context: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
-    if BOT_TOKEN == "ВСТАВЬ_СЮДА_ТОКЕН_ОТ_BOTFATHER":
-        print("⚠️  Ты забыл(а) вставить токен в файл bot.py!")
+    if not BOT_TOKEN:
+        print("⚠️  Set the BOT_TOKEN environment variable before starting the bot.")
         return
 
     init_db()
